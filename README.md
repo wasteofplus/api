@@ -14,14 +14,15 @@ Most requests should be authenticated. When authenticating, send two parameters,
 
 ## Endpoints
 
-### `POST /polls/create`
+### Polls
+#### `POST /polls/create`
 
 Creates a poll.
 
 **Request**
 
 ```http
-GET /polls/create HTTP/1.1
+POST /polls/create HTTP/1.1
 Host: wasteofplus.radi8.dev
 Content-Type: application/json
 
@@ -80,7 +81,7 @@ Content-Type: application/json
 }
 ```
 
-### `GET /polls/get/{pollID}`
+#### `GET /polls/get/{pollID}`
 
 Get a poll by poll ID.
 
@@ -128,7 +129,7 @@ Content-Type: application/json
 }
 ```
 
-### `GET /polls/get/post/{postID}`
+#### `GET /polls/get/post/{postID}`
 
 Get a poll by post ID.
 
@@ -176,7 +177,7 @@ Content-Type: application/json
 }
 ```
 
-### `POST /polls/vote/{pollID}`
+#### `PUT /polls/vote/{pollID}`
 
 Votes on a poll.
 
@@ -249,5 +250,67 @@ Content-Type: application/json
 
 {
   "error": "not authorized",
+}
+```
+
+### Reactions
+
+#### `POST /reactions/react`
+
+Reacts to a post. (Or remove a reaction)
+
+**Request**
+
+```http
+GET /reactions/react HTTP/1.1
+Host: wasteofplus.radi8.dev
+Content-Type: application/json
+
+{
+    "username": str, # Your wasteof.money username
+    "token": str # Your wasteof2 API token
+    "pollID": str # The post you would like to react to
+    "emoji": str # The emoji you are reacting with (or removing)
+}
+```
+
+**Responses**
+
+For voting success:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "ok": "added reaction",
+}
+
+# Another response could also be:
+
+{
+  "ok": "removed reaction" # If a reaction is being removed
+}
+```
+
+For reaction failure, when emoji is not allowed:
+
+```http
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "error": "reaction not allowed",
+}
+```
+
+For reaction failure, when the post you want to react to is not found:
+
+```http
+HTTP/1.1 409 Unauthorized
+Content-Type: application/json
+
+{
+  "error": "post not found",
 }
 ```

@@ -12,10 +12,15 @@ router = APIRouter(prefix="/polls")
 
 @router.post("/create")
 async def createPoll(username: str, token: str, postID: str, polloptions: str):
+    global idCache
     if verify(username, token):
-        userID = requests.get(f"https://api.wasteof.money/users/{username}").json()[
-            "id"
-        ]
+        if username in idCache:
+            userID = idCache[username]
+        else:
+            userID = requests.get(f"https://api.wasteof.money/users/{username}").json()[
+                "id"
+            ]
+            idCache[username] = userID
         post = requests.get(f"https://api.wasteof.money/posts/{postID}")
         if post.status_code == 200 and post["poster"]["id"] == userID:
             options = polloptions.split(",")
@@ -65,12 +70,17 @@ async def getPoll(postID: str):
 
 @router.put("/vote/{pollID}")
 async def vote(token: str, username: str, pollOption: str, pollID: str):
+    global idCache
     if verify(username, token):
         poll = pollscoll.find_one({"_id": ObjectId(pollID)})
         if poll:
-            userID = requests.get(f"https://api.wasteof.money/users/{username}").json()[
-                "id"
-            ]
+            if username in idCache:
+                userID = idCache[username]
+            else:
+                userID = requests.get(
+                    f"https://api.wasteof.money/users/{username}"
+                ).json()["id"]
+                idCache[username] = userID
             if (
                 pollOption in poll["options"]
                 and userID not in poll["votes"][pollOption]

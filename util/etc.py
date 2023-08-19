@@ -2,14 +2,17 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 import requests
+from cachetools import TTLCache
 
 load_dotenv()
 CONNECTION_STRING = os.getenv("CONNECTION_STRING")
 
 client = MongoClient(CONNECTION_STRING)
+print("connect to db")
 db = client["wasteofplus"]
 pollscoll = db["polls"]
-print("connect to db")
+reactionscoll = db["reactions"]
+idCache = TTLCache(maxsize=1000, ttl=300)
 
 
 def verify(username: str, token: str):
