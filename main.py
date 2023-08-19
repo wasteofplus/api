@@ -37,7 +37,7 @@ async def error_exception_handler(request: Request, exc: HTTPException):
 def root():
     return {
         "ok": "ok",
-        "version": "no version for now, pre v1", # will figure out later
+        "version": "no version for now, pre v1",  # will figure out later
         "uptime": time.time() - startTime,
         "docs": "/docs",
     }
