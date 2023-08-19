@@ -21,7 +21,7 @@ async def createPoll(username: str, token: str, postID: str, polloptions: str):
                 "id"
             ]
             idCache[username] = userID
-        post = requests.get(f"https://api.wasteof.money/posts/{postID}")
+        post = requests.get(f"https://api.wasteof.money/posts/{postID}").json()
         if post.status_code == 200 and post["poster"]["id"] == userID:
             options = polloptions.split(",")
             votes = {option: [] for option in options}
