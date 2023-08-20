@@ -21,8 +21,8 @@ async def createPoll(username: str, token: str, postID: str, polloptions: str):
                 "id"
             ]
             idCache[username] = userID
-        post = requests.get(f"https://api.wasteof.money/posts/{postID}").json()
-        if post.status_code == 200 and post["poster"]["id"] == userID:
+        post = requests.get(f"https://api.wasteof.money/posts/{postID}")
+        if post.status_code == 200 and post.json()["poster"]["id"] == userID:
             options = polloptions.split(",")
             votes = {option: [] for option in options}
             poll = pollscoll.insert_one(
@@ -36,7 +36,7 @@ async def createPoll(username: str, token: str, postID: str, polloptions: str):
 
             return {"ok": "poll created", "_id": str(poll.inserted_id)}
         else:
-            if not post["poster"]["id"] == userID:
+            if not post.json()["poster"]["id"] == userID:
                 return JSONResponse(
                     {"error": "poll with post ID already created"}, status_code=409
                 )
