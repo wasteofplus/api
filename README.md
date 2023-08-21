@@ -262,7 +262,7 @@ Reacts to a post. (Or remove a reaction)
 **Request**
 
 ```http
-GET /reactions/react HTTP/1.1
+POST /reactions/react HTTP/1.1
 Host: wasteofplus.radi8.dev
 Content-Type: application/json
 
@@ -312,5 +312,47 @@ Content-Type: application/json
 
 {
   "error": "post not found",
+}
+```
+
+#### `GET /reactions/get/{postID}`
+
+Gets reactions on a post.
+
+**Request**
+
+```http
+GET /reactions/get/{postID} HTTP/1.1
+Host: wasteofplus.radi8.dev
+```
+
+**Responses**
+
+
+For reaction fetching success:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  '_id': '64e3773ac833365a991bd34b',
+  'postID': '64dea39b31ac5176f8327aec', 
+  'reactions': {
+    'red-heart': [
+      '6185cd269dd808c2c76fa070'
+      ]
+    }
+  }
+```
+
+For reaction fetching failure, when post is not found:
+
+```http
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{
+  "error": "post not found, couldn't get reactions"
 }
 ```

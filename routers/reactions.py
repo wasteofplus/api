@@ -41,7 +41,7 @@ async def react(username: str, token: str, postID: str, emoji: str):
                 ).json()["id"]
                 idCache[username] = userID
             if dbpost:
-                if userID in dbpost["reactions"]:
+                if userID in dbpost["reactions"][emoji]:
                     reactionscoll.update_one(
                         {"postID": postID},
                         {"$pull": {f"reactions.{emoji}": userID}},
